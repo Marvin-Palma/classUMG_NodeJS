@@ -8,7 +8,7 @@ var nodemailer = require('nodemailer');
 var Usuario = require('../models/usuario.model');
 var Verificacion = require('../models/verificacion.model');
 
-var correoClase = require('../clases/correo');
+var correoClase = require('../class/correo');
 
 var phoneToken = require('generate-sms-verification-code');
  
