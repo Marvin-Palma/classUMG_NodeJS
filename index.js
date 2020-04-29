@@ -8,7 +8,7 @@ var port = 3900;
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb://localhost:27017/classUMG', { useUnifiedTopology: true, useNewUrlParser:true }).then(()=>{
+mongoose.connect('mongodb://localhost:27017/classUMG', { useUnifiedTopology: true, useNewUrlParser:true, useCreateIndex: true }).then(()=>{
     console.log('La conexión a la base de datos se ha realizado correctamente!!!');
 
     app.listen(port, ()=>{

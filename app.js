@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var app = express();
 
 //Cargar Ficheros Rutas
+var usuarioRoute = require('./routes/user.routes');
 
 //Cargar Middlewares
 app.use(bodyParser.urlencoded({extended:false}));
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 //Añadir prefijos a rutas / Cargar rutas
-
+app.use('/api', usuarioRoute);
 
 //Exportar el módulo (fichero actual)
 module.exports = app;
