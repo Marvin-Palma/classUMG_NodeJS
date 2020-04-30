@@ -410,7 +410,7 @@ var controller = {
             });
         }
 
-        var nuevaPassword = bcrypt(params.password);
+        var nuevaPassword = bcrypt.hashSync(params.password, 10);
         Usuario.findOneAndUpdate({
             email: params.email, 
             estado: "R"
