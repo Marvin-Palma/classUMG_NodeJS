@@ -121,7 +121,7 @@ var Correo = {
                 </tr>
               <tr>
                 <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;" >
-                  <p style="margin: 0;">Si tienes alguna duda, no dudes en responder este e-mail; estaremos encantandos de poderte ayudar.</p>
+                  <p style="margin: 0;">Si tienes alguna duda, no dudes en responder este e-mail; estaremos encantados de poderte ayudar.</p>
                 </td>
               </tr>
               <tr>

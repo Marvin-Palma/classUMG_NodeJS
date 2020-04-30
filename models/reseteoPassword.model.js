@@ -1,12 +1,11 @@
 
-
 'use strict'
 
 var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const VerificacionSchema = new Schema({
+const ReseteoPasswordSchema = new Schema({
     idUsuario: {
         type: String,
         required: [true, 'El id es necesario.']
@@ -25,8 +24,7 @@ const VerificacionSchema = new Schema({
     }
 });
 
-
-VerificacionSchema.methods.compararPassword = function (codigo) {
+ReseteoPasswordSchema.methods.compararCodigo = function (codigo) {
     if (bcrypt.compareSync(codigo, this.codigo)) {
         return true;
     }
@@ -36,6 +34,6 @@ VerificacionSchema.methods.compararPassword = function (codigo) {
 };
 
 
-module.exports = mongoose.model('Verificacion', VerificacionSchema);
+module.exports = mongoose.model('ReseteoPassword', ReseteoPasswordSchema);
 
 

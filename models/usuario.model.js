@@ -1,6 +1,7 @@
 
 'use strict'
 
+var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -22,6 +23,14 @@ const UsuarioSchema = new Schema({
         type: String,
         required: [true, 'La contraseña es necesaria.']
     },
+    pregunta: {
+        type: String,
+        required: [true, 'La pregunta de seguridad es necesaria.']
+    },
+    respuestaPregunta: {
+        type: String,
+        required: [true, 'La respuesta de pregunta de seguridad es necesaria.']
+    },
     stars:{
         type: Number,
         default: 0
@@ -31,6 +40,23 @@ const UsuarioSchema = new Schema({
     }
 });
 
+UsuarioSchema.methods.compararPassword = function (password) {
+    if (bcrypt.compareSync(password, this.password)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+
+UsuarioSchema.methods.compararRespuestaPreguntaSeguridad = function (respuesta) {
+    if (bcrypt.compareSync(respuesta, this.respuestaPregunta)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
 
 module.exports = mongoose.model('Usuario', UsuarioSchema);
 
