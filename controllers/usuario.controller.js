@@ -23,7 +23,7 @@ var controller = {
 
         //Validación de los parametros
         if (validator.isEmpty(params.nombre) || validator.isEmpty(params.avatar) || validator.isEmpty(params.email) || validator.isEmpty(params.password) || validator.isEmpty(params.pregunta) || validator.isEmpty(params.respuestaPregunta)) {
-            return res.status(400).send({
+            return res.status(200).send({
                 status: false,
                 mensaje: 'Datos incompletos.'
             });
@@ -82,8 +82,8 @@ var controller = {
                             mensaje: 'Hemos enviado un correo para su verificación.'
                         });
                     }).catch(err => {
-                        res.status(500).send({
-                            status: true,
+                        res.status(200).send({
+                            status: false,
                             mensaje: 'Error al crear registro para verificación.'
                         });
                     });
@@ -92,7 +92,7 @@ var controller = {
             });
 
         }).catch(err => {
-            res.status(500).send({
+            res.status(200).send({
                 status: false,
                 mensaje: 'Error en la creación de usuario, email en uso.'
             });
@@ -376,7 +376,7 @@ var controller = {
                                 });
 
                             }).catch(err => {
-                                res.status(500).send({
+                                res.status(200).send({
                                     status: false,
                                     mensaje: 'Error al crear registro de reseteo de clave.'
                                 });
