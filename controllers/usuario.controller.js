@@ -24,6 +24,7 @@ var controller = {
         //Validación de los parametros
         if (validator.isEmpty(params.nombre) || validator.isEmpty(params.avatar) || validator.isEmpty(params.email) || validator.isEmpty(params.password) || validator.isEmpty(params.pregunta) || validator.isEmpty(params.respuestaPregunta)) {
             return res.status(200).send({
+                codigo:201,
                 status: false,
                 mensaje: 'Datos incompletos.'
             });
@@ -66,7 +67,7 @@ var controller = {
             //Envío del mensaje
             correoTransportador.sendMail(info, function (error, info) {
                 if (error) {
-                    res.status(500).send({
+                    res.status(200).send({
                         status: false,
                         mensaje: 'Error al enviar el correo.'
                     });
@@ -78,11 +79,13 @@ var controller = {
                     }
                     Verificacion.create(registroVerificacion).then(registroPorVerificar => {
                         res.status(200).send({
+                            codigo:200,
                             status: true,
                             mensaje: 'Hemos enviado un correo para su verificación.'
                         });
                     }).catch(err => {
                         res.status(200).send({
+                            codigo:202,
                             status: false,
                             mensaje: 'Error al crear registro para verificación.'
                         });
@@ -93,6 +96,7 @@ var controller = {
 
         }).catch(err => {
             res.status(200).send({
+                codigo:204,
                 status: false,
                 mensaje: 'Error en la creación de usuario, email en uso.'
             });
@@ -106,7 +110,8 @@ var controller = {
 
         //Validación de los parametros
         if (validator.isEmpty(params.usuario) || validator.isEmpty(params.password)) {
-            return res.status(400).send({
+            return res.status(200).send({
+                codigo:400,
                 status: false,
                 mensaje: 'Datos incompletos.'
             });
@@ -121,7 +126,8 @@ var controller = {
             if (err) throw err;
 
             if (!usuario) {
-                return res.status(400).send({
+                return res.status(200).send({
+                    codigo:201,
                     status: false,
                     mensaje: 'Usuario/Contraseña no son correctos.'
                 });
@@ -139,22 +145,34 @@ var controller = {
                     });
 
                     return res.status(200).send({
+                        codigo:200,
                         status: true,
-                        jwt: tokenUser
+                        jwt: tokenUser,
+                        mensaje: 'Bienvenido.'
                     });
 
                 } else {
-                    return res.status(400).send({
+                    return res.status(200).send({
+                        codigo:201,
                         status: false,
                         mensaje: 'Usuario/Contraseña no son correctos'
                     });
                 }
             } else if (usuario.estado == "V") {
 
-                return res.status(200).send({
-                    status: true,
-                    mensaje: "Ingresa el código de verificación."
-                });
+                if (usuario.compararPassword(params.password)) {
+                    return res.status(200).send({
+                        codigo:210,
+                        status: false,
+                        mensaje: "Ingresa el código de verificación."
+                    });
+                }else{
+                    return res.status(200).send({
+                        codigo:201,
+                        status: false,
+                        mensaje: 'Usuario/Contraseña no son correctos.'
+                    });
+                }
 
             } else if (usuario.estado == "R") {
 
@@ -173,15 +191,17 @@ var controller = {
                         });
 
                         return res.status(200).send({
+                            codigo:202,
                             status: true,
                             jwt: tokenUser,
                             mensaje: 'Ingresa tus nuevas credenciales.'
                         });
 
                     } else {
-                        return res.status(400).send({
+                        return res.status(200).send({
+                            codigo:203,
                             status: false,
-                            mensaje: 'Usuario/Contraseña no son correctos, usuario con clave reseteada, por favor verifica tu email.'
+                            mensaje: 'Contraseña incorrecta, usuario con clave reseteada, por favor verifica tu email.'
                         });
                     }
 
@@ -198,7 +218,8 @@ var controller = {
 
         //Validación de los parametros
         if (validator.isEmpty(params.email) || validator.isEmpty(params.codigo)) {
-            return res.status(400).send({
+            return res.status(200).send({
+                codigo:400,
                 status: false,
                 mensaje: 'Datos incompletos.'
             });
@@ -212,13 +233,15 @@ var controller = {
             if (err) throw err;
 
             if (!registroPorVerificar) {
-                return res.status(400).send({
+                return res.status(200).send({
+                    codigo:201,
                     status: false,
                     mensaje: 'Email no encontrado.'
                 });
             }
-
+            
             if (registroPorVerificar.compararPassword(params.codigo)) {
+                
 
                 Verificacion.findOneAndUpdate({
                     email: params.email,
@@ -230,7 +253,8 @@ var controller = {
                 }, (err, registroVerificado) => {
 
                     if (err || !registroVerificado) {
-                        return res.status(400).send({
+                        return res.status(200).send({
+                            codigo:202,
                             status: false,
                             mensaje: 'No se encontró el registro para actualizar.'
                         });
@@ -244,12 +268,14 @@ var controller = {
                         new: true
                     }, (err, usuarioAutorizado) => {
                         if (err || !usuarioAutorizado) {
-                            return res.status(400).send({
+                            return res.status(200).send({
+                                codigo:203,
                                 status: false,
                                 mensaje: 'No se encontró el usuario para actualizar.'
                             });
                         } else {
                             return res.status(200).send({
+                                codigo: 200,
                                 status: true,
                                 mensaje: 'Usuario autorizado, Ingresa.'
                             });
@@ -258,7 +284,9 @@ var controller = {
                     });
                 });
             } else {
-                return res.status(400).send({
+                
+                return res.status(200).send({
+                    codigo: 204,
                     status: false,
                     mensaje: 'Código de verificación inválido.'
                 });
@@ -273,7 +301,8 @@ var controller = {
 
         //Validación de los parametros
         if (validator.isEmpty(params.email) || validator.isEmpty(params.opcion)) {
-            return res.status(400).send({
+            return res.status(200).send({
+                codigo:201,
                 status: false,
                 mensaje: 'Datos incompletos.'
             });
@@ -288,13 +317,15 @@ var controller = {
                     if (err) throw err;
 
                     if (!usuarioPorResetear) {
-                        return res.status(400).send({
+                        return res.status(200).send({
+                            codigo:202,
                             status: false,
                             mensaje: 'Email no encontrado.'
                         });
                     }
 
                     return res.status(200).send({
+                        codigo:200,
                         status: true,
                         pregunta: usuarioPorResetear.pregunta
                     });
@@ -303,7 +334,8 @@ var controller = {
                 break;
             case "2":
                 if (validator.isEmpty(params.respuestaPregunta)) {
-                    return res.status(400).send({
+                    return res.status(200).send({
+                        codigo:203,
                         status: false,
                         mensaje: 'Datos incompletos.'
                     });
@@ -314,14 +346,16 @@ var controller = {
                     if (err) throw err;
 
                     if (!usuarioPorResetear) {
-                        return res.status(400).send({
+                        return res.status(200).send({
+                            codigo:204,
                             status: false,
                             mensaje: 'Email no encontrado.'
                         });
                     }
 
                     if (usuarioPorResetear.estado == "R") {
-                        return res.status(400).send({
+                        return res.status(200).send({
+                            codigo: 205,
                             status: false,
                             mensaje: 'Usuario reseteado, por favor valida tu email.'
                         });
@@ -363,12 +397,14 @@ var controller = {
 
                                 correoTransportador.sendMail(info, function (error, info) {
                                     if (error) {
-                                        res.status(500).send({
+                                        res.status(200).send({
+                                            codigo:210,
                                             status: false,
                                             mensaje: 'Error al enviar el correo.'
                                         });
                                     } else {
                                         res.status(200).send({
+                                            codigo:200,
                                             status: true,
                                             mensaje: 'Hemos enviado una contraseña temporal a tu correo.'
                                         });
@@ -377,13 +413,15 @@ var controller = {
 
                             }).catch(err => {
                                 res.status(200).send({
+                                    codigo:211,
                                     status: false,
                                     mensaje: 'Error al crear registro de reseteo de clave.'
                                 });
                             });
 
                         } else {
-                            res.status(400).send({
+                            res.status(200).send({
+                                codigo:212,
                                 status: false,
                                 mensaje: 'Respuesta Incorrecta.'
                             });
@@ -393,7 +431,8 @@ var controller = {
 
                 break;
             default:
-                return res.status(400).send({
+                return res.status(200).send({
+                    codigo:299,
                     status: false,
                     mensaje: 'Opcion inválida.'
                 });
@@ -404,7 +443,8 @@ var controller = {
         var params = req.body;
 
         if (validator.isEmpty(params.password) || validator.isEmpty(params.email)) {
-            return res.status(400).send({
+            return res.status(200).send({
+                codigo:201,
                 status: false,
                 mensaje: 'Datos incompletos.'
             });
@@ -422,7 +462,8 @@ var controller = {
         }, (err, usuarioActualizado) => {
 
             if (err || !usuarioActualizado) {
-                return res.status(400).send({
+                return res.status(200).send({
+                    codigo:202,
                     status: false,
                     mensaje: 'No se encontró el registro para actualizar.'
                 });
@@ -434,6 +475,7 @@ var controller = {
                 estado: "U"
             }, () => {});
             return res.status(200).send({
+                codigo:200,
                 status: true,
                 mensaje: 'Credenciales actualizadas con éxito.'
             });
