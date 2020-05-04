@@ -68,6 +68,7 @@ var controller = {
             correoTransportador.sendMail(info, function (error, info) {
                 if (error) {
                     res.status(200).send({
+                        codigo:200,
                         status: false,
                         mensaje: 'Error al enviar el correo.'
                     });
