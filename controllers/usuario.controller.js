@@ -325,6 +325,14 @@ var controller = {
                         });
                     }
 
+                    if (usuarioPorResetear.estado == "R") {
+                        return res.status(200).send({
+                            codigo: 205,
+                            status: false,
+                            mensaje: 'Usuario reseteado, por favor valida tu email.'
+                        });
+                    }
+
                     return res.status(200).send({
                         codigo:200,
                         status: true,
@@ -405,7 +413,7 @@ var controller = {
                                         });
                                     } else {
                                         res.status(200).send({
-                                            codigo:200,
+                                            codigo:220,
                                             status: true,
                                             mensaje: 'Hemos enviado una contraseña temporal a tu correo.'
                                         });
@@ -471,7 +479,8 @@ var controller = {
             }
 
             ReseteoPassword.findOneAndUpdate({
-                email: params.email
+                email: params.email,
+                estado: 'A'
             }, {
                 estado: "U"
             }, () => {});
