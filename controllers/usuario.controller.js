@@ -491,6 +491,14 @@ var controller = {
             });
         });
 
+    },
+
+    infoUsuarioToken: (req, res) =>{
+        return res.status(200).send({
+            codigo:200,
+            status: true,
+            mensaje: req.usuario
+        });
     }
 
 }

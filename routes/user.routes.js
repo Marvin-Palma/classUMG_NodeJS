@@ -15,6 +15,7 @@ router.post('/login', usuarioController.login);
 router.post('/verificacion', usuarioController.verificacion);
 router.post('/reseteo-password', usuarioController.resetPassword);
 router.post('/nuevas-credenciales', middleware.verificaToken, usuarioController.restablecerCredenciales);
+router.post('/info-usuario', middleware.verificaToken, usuarioController.infoUsuarioToken);
 
 
 module.exports = router;

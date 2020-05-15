@@ -14,7 +14,7 @@ exports.verificaToken = (req, res, next) =>{
 
     }).catch( err => {
 
-        res.status(400).send({
+        res.status(200).send({
             status: false,
             mensaje: 'Token inválido.'
         });
