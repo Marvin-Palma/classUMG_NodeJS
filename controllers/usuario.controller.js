@@ -494,11 +494,23 @@ var controller = {
     },
 
     infoUsuarioToken: (req, res) =>{
-        return res.status(200).send({
-            codigo:200,
-            status: true,
-            mensaje: req.usuario
+
+        Usuario.findOne({
+            email: req.usuario.email
+        }, (err, usuarioEncontrado) => {
+            var datosUsuario={
+                nombre:usuarioEncontrado.nombre,
+                email:usuarioEncontrado.email,
+                avatar:usuarioEncontrado.avatar,
+                stars:usuarioEncontrado.stars
+            }
+            return res.status(200).send({
+                codigo:200,
+                status: true,
+                mensaje: datosUsuario
+            });
         });
+
     }
 
 }
