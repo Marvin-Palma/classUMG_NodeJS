@@ -16,6 +16,9 @@ router.post('/verificacion', usuarioController.verificacion);
 router.post('/reseteo-password', usuarioController.resetPassword);
 router.post('/nuevas-credenciales', middleware.verificaToken, usuarioController.restablecerCredenciales);
 router.post('/info-usuario', middleware.verificaToken, usuarioController.infoUsuarioToken);
+router.post('/cambio-nombre-avatar', middleware.verificaToken, usuarioController.cambiarNombreAvatar);
+router.post('/cambio-password', middleware.verificaToken, usuarioController.cambioPassword);
+router.post('/cambio-pregunta', middleware.verificaToken, usuarioController.cambioPregunta);
 
 
 module.exports = router;

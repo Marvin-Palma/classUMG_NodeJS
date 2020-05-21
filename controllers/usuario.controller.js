@@ -502,7 +502,8 @@ var controller = {
                 nombre:usuarioEncontrado.nombre,
                 email:usuarioEncontrado.email,
                 avatar:usuarioEncontrado.avatar,
-                stars:usuarioEncontrado.stars
+                stars:usuarioEncontrado.stars,
+                preguntaSeguridad:usuarioEncontrado.pregunta
             }
             return res.status(200).send({
                 codigo:200,
@@ -511,6 +512,117 @@ var controller = {
             });
         });
 
+    },
+
+    cambiarNombreAvatar: (req, res) => {
+        
+        var params = req.body;
+
+        Usuario.findOneAndUpdate({
+            email: req.usuario.email,
+            estado: 'A'
+        }, {
+            nombre: params.nombre,
+            avatar: params.avatar
+        }, {
+            new: true
+        }, (err, usuarioActualizado) => {
+
+            var user={
+                nombre:usuarioActualizado.nombre, 
+                email:usuarioActualizado.email, 
+                avatar:usuarioActualizado.avatar, 
+                stars:usuarioActualizado.stars, 
+                pregunta:usuarioActualizado.pregunta
+            }
+            return res.status(200).send({
+                codigo:200,
+                status: true,
+                mensaje: user
+            });
+        });
+    },
+
+    cambioPassword: (req, res) =>{
+        
+        var params = req.body;
+
+        var nuevaPassword = bcrypt.hashSync(params.password, 10);
+        Usuario.findOneAndUpdate({
+            email: params.email, 
+            estado: "A"
+        }, {
+            password: nuevaPassword
+        }, {
+            new: true
+        }, (err, usuarioActualizado) => {
+            
+
+            if (err || !usuarioActualizado) {
+                return res.status(200).send({
+                    codigo:202,
+                    status: false,
+                    mensaje: 'No se encontró el registro para actualizar.'
+                });
+            }
+
+            var user={
+                nombre:usuarioActualizado.nombre, 
+                email:usuarioActualizado.email, 
+                avatar:usuarioActualizado.avatar, 
+                stars:usuarioActualizado.stars, 
+                pregunta:usuarioActualizado.pregunta
+            }
+
+            return res.status(200).send({
+                codigo:200,
+                status: true,
+                mensaje: 'Credenciales actualizadas con éxito.',
+                usuario: user
+            });
+        });
+    },
+
+    cambioPregunta: (req, res)=>{
+
+        var params = req.body;
+
+        var nuevaRespuestaPregunta = bcrypt.hashSync(params.respuestaPregunta, 10);
+
+        Usuario.findOneAndUpdate({
+            email: req.usuario.email, 
+            estado: "A"
+        }, {
+            pregunta: params.pregunta,
+            respuestaPregunta: nuevaRespuestaPregunta
+        }, {
+            new: true
+        }, (err, usuarioActualizado) => {
+            
+
+            if (err || !usuarioActualizado) {
+                return res.status(200).send({
+                    codigo:202,
+                    status: false,
+                    mensaje: 'No se encontró el registro para actualizar.'
+                });
+            }
+
+            var user={
+                nombre:usuarioActualizado.nombre, 
+                email:usuarioActualizado.email, 
+                avatar:usuarioActualizado.avatar, 
+                stars:usuarioActualizado.stars, 
+                pregunta:usuarioActualizado.pregunta
+            }
+
+            return res.status(200).send({
+                codigo:200,
+                status: true,
+                mensaje: 'Preguntas actualizadas con éxito.',
+                usuario: user
+            });
+        });
     }
 
 }
